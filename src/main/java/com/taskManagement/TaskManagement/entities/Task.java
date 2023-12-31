@@ -16,7 +16,7 @@ public class Task {
     private String id;
     private String title;
     private String description;
-    private Constants.Status status = Constants.Status.PENDING;
+    private String status = String.valueOf(Constants.Status.PENDING);
 
     @ManyToOne(fetch=FetchType.LAZY)
     @JoinColumn(name = "user_id",nullable = false)

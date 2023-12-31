@@ -2,6 +2,7 @@ package com.taskManagement.TaskManagement.controllers;
 
 import com.taskManagement.TaskManagement.entities.JwtRequest;
 import com.taskManagement.TaskManagement.entities.JwtResponse;
+import com.taskManagement.TaskManagement.entities.User;
 import com.taskManagement.TaskManagement.jwt.JwtHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -38,12 +39,12 @@ public class AuthController {
 
         this.doAuthenticate(request.getUsername(), request.getPassword());
 
-        UserDetails userDetails = userDetailsService.loadUserByUsername(request.getUsername());
+        User userDetails = (User) userDetailsService.loadUserByUsername(request.getUsername());
         String token = this.helper.generateToken(userDetails);
 
         JwtResponse response = JwtResponse.builder()
                 .jwtToken(token)
-                .username(userDetails.getUsername()).build();
+                .username(userDetails.getUsername()).id(userDetails.getId()).build();
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 

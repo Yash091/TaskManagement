@@ -41,7 +41,7 @@ public class TaskServiceImpl implements TaskService {
             // Update task properties
             existingTask.setTitle(updatedTask.getTitle());
             existingTask.setDescription(updatedTask.getDescription());
-
+            existingTask.setStatus(updatedTask.getStatus());
             return taskRepository.save(existingTask);
         } else {
             throw new CustomException("Task not found with Id: " + taskId);

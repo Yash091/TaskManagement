@@ -1,6 +1,7 @@
 package com.taskManagement.TaskManagement.services.impl;
 
 import com.taskManagement.TaskManagement.entities.User;
+import com.taskManagement.TaskManagement.exception.CustomException;
 import com.taskManagement.TaskManagement.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -15,9 +16,9 @@ public class CustomUserDetailsService implements UserDetailsService {
     UserRepository userRepository;
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        System.out.println(username);
+
         if(!userRepository.existsByUsername(username)){
-            throw new RuntimeException("User does not exists!!");
+            throw new CustomException("User does not exists!!");
         }
         User user = userRepository.findByUsername(username);
         return user;
