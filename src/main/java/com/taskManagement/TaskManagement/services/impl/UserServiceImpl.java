@@ -20,22 +20,33 @@ public class UserServiceImpl implements UserService {
 
     public User registerUser(User user) {
         if(userRepository.existsByUsername(user.getUsername())) {
-            throw new CustomException("Username does not exists. Try another username.");
+            throw new CustomException("Username already exists. Try another username.");
         }
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         return userRepository.save(user);
     }
 
-    public Optional<User> getUserById(Long userId) {
-        return userRepository.findById(userId);
+    public Optional<User> getUserById(String userId) {
+
+        Optional<User>user = Optional.ofNullable(userRepository.findById(userId).orElse(null));
+        if(user.isPresent()){
+            throw new CustomException("User not found!");
+        }
+        return user;
     }
 
     public User getUserByUsername(String username) {
+        if(!userRepository.existsByUsername(username)) {
+            throw new CustomException("User does not exists!");
+        }
         return userRepository.findByUsername(username);
     }
 
 
-    public void deleteUser(Long userId) {
+    public void deleteUser(String userId) {
+        if(!userRepository.existsById(userId)) {
+            throw new CustomException("User does not exists!");
+        }
         userRepository.deleteById(userId);
     }
 }

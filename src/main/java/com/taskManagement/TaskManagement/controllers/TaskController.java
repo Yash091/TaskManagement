@@ -2,6 +2,7 @@ package com.taskManagement.TaskManagement.controllers;
 
 import com.taskManagement.TaskManagement.entities.Task;
 import com.taskManagement.TaskManagement.entities.User;
+import com.taskManagement.TaskManagement.exception.CustomException;
 import com.taskManagement.TaskManagement.services.TaskService;
 import com.taskManagement.TaskManagement.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,15 +31,19 @@ public class TaskController {
 
     @PostMapping("/create")
     public ResponseEntity<Task> createTask(@RequestBody Task task) {
-        String username = SecurityContextHolder.getContext().getAuthentication().getName();
-        User currentUser = userService.getUserByUsername(username);
+        try{
+            String username = SecurityContextHolder.getContext().getAuthentication().getName();
+            User currentUser = userService.getUserByUsername(username);
 
-        if (currentUser != null) {
-            task.setUser(currentUser);
-            Task createdTask = taskService.createTask(task);
-            return new ResponseEntity<Task>(createdTask, HttpStatus.CREATED);
-        } else {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            if (currentUser != null) {
+                task.setUser(currentUser);
+                Task createdTask = taskService.createTask(task);
+                return new ResponseEntity<Task>(createdTask, HttpStatus.CREATED);
+            } else {
+                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            }
+        }catch (Exception e){
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 

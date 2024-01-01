@@ -20,11 +20,15 @@ public class TaskServiceImpl implements TaskService {
 
     @Override
     public List<Task> getTasksByUserId(String userId) {
+
         return taskRepository.findByUserId(userId);
     }
 
     @Override
     public Optional<Task> getTaskById(String taskId) {
+        if(!taskRepository.existsById(taskId)) {
+            throw new CustomException("Task does not exists!");
+        }
         return taskRepository.findById(taskId);
     }
 
@@ -38,7 +42,6 @@ public class TaskServiceImpl implements TaskService {
     public Task updateTask(String taskId, Task updatedTask) {
         Task existingTask = taskRepository.findById(taskId).orElse(null);
         if (existingTask != null) {
-            // Update task properties
             existingTask.setTitle(updatedTask.getTitle());
             existingTask.setDescription(updatedTask.getDescription());
             existingTask.setStatus(updatedTask.getStatus());

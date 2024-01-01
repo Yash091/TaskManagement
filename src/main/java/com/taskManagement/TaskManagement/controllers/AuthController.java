@@ -54,16 +54,10 @@ public class AuthController {
         try {
             manager.authenticate(authentication);
 
-
         } catch (BadCredentialsException e) {
-            throw new BadCredentialsException(" Invalid Username or Password  !!");
+            throw new BadCredentialsException(" Credentials Invalid  !!");
         }
 
-    }
-
-    @ExceptionHandler(BadCredentialsException.class)
-    public String exceptionHandler() {
-        return "Credentials Invalid !!";
     }
 
 }
