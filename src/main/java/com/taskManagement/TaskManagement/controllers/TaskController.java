@@ -2,9 +2,9 @@ package com.taskManagement.TaskManagement.controllers;
 
 import com.taskManagement.TaskManagement.entities.Task;
 import com.taskManagement.TaskManagement.entities.User;
-import com.taskManagement.TaskManagement.exception.CustomException;
 import com.taskManagement.TaskManagement.services.TaskService;
 import com.taskManagement.TaskManagement.services.UserService;
+import com.taskManagement.TaskManagement.validator.Validator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -23,6 +23,9 @@ public class TaskController {
     @Autowired
     private UserService userService;
 
+    @Autowired
+    private Validator validator;
+
     @GetMapping("/{userId}")
     public ResponseEntity<List<Task>> getTaskByUserId(@PathVariable String userId) {
         List<Task> tasks = taskService.getTasksByUserId(userId);
@@ -32,6 +35,7 @@ public class TaskController {
     @PostMapping("/create")
     public ResponseEntity<Task> createTask(@RequestBody Task task) {
         try{
+            validator.validate(task);
             String username = SecurityContextHolder.getContext().getAuthentication().getName();
             User currentUser = userService.getUserByUsername(username);
 
@@ -54,6 +58,7 @@ public class TaskController {
 
     @PutMapping("/task/{taskId}")
     public ResponseEntity<Task> updateTask(@PathVariable String taskId, @RequestBody Task task) {
+        validator.validate(task);
         return ResponseEntity.ok(taskService.updateTask(taskId,task));
     }
 

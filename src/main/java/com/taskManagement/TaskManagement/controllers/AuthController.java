@@ -4,6 +4,7 @@ import com.taskManagement.TaskManagement.entities.JwtRequest;
 import com.taskManagement.TaskManagement.entities.JwtResponse;
 import com.taskManagement.TaskManagement.entities.User;
 import com.taskManagement.TaskManagement.jwt.JwtHelper;
+import com.taskManagement.TaskManagement.validator.Validator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,11 +32,16 @@ public class AuthController {
     @Autowired
     private JwtHelper helper;
 
+    @Autowired
+    private Validator validator;
+
     private Logger logger = LoggerFactory.getLogger(AuthController.class);
 
     @CrossOrigin(origins = "http://127.0.0.1:5173")
     @PostMapping("/login")
     public ResponseEntity<JwtResponse> login(@RequestBody JwtRequest request) {
+
+        validator.validate(request);
 
         this.doAuthenticate(request.getUsername(), request.getPassword());
 

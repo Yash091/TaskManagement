@@ -2,6 +2,7 @@ package com.taskManagement.TaskManagement.controllers;
 
 import com.taskManagement.TaskManagement.entities.User;
 import com.taskManagement.TaskManagement.services.UserService;
+import com.taskManagement.TaskManagement.validator.Validator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,8 +18,12 @@ public class UserController {
     @Autowired
     private UserService userService;
 
+    @Autowired
+    private Validator validator;
+
     @PostMapping("/create")
     public ResponseEntity<User> create_user(@RequestBody User user) {
+        validator.validate(user);
         user.setId(UUID.randomUUID().toString());
         User user1 = userService.registerUser(user);
         return ResponseEntity.status(HttpStatus.CREATED).body(user1);
